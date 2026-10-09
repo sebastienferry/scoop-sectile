@@ -1,0 +1,37 @@
+{
+    "version": "0.4.1",
+    "description": "Local-first workflow manager for tickets, coding agents and pull requests",
+    "homepage": "https://github.com/sebastienferry/sectile",
+    "license": "Unknown",
+    "notes": [
+        "Sectile is not signed with a publisher identity: Windows may warn once before opening it.",
+        "Before an update, quit Sectile and stop its agent: Stop-Process -Name sectile-agent"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sebastienferry/sectile/releases/download/v0.4.1/sectile-desktop-windows-amd64.zip",
+            "hash": "fc1dc8afb1d271bbf02892f5533eb36342b5bea8cffe6557d2850ddc134a2c23"
+        }
+    },
+    "extract_dir": "Sectile-win32-x64",
+    "shortcuts": [
+        [
+            "Sectile.exe",
+            "Sectile"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/sebastienferry/sectile"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/sebastienferry/sectile/releases/download/v$version/sectile-desktop-windows-amd64.zip",
+                "hash": {
+                    "url": "https://github.com/sebastienferry/sectile/releases/download/v$version/SHA256SUMS",
+                    "regex": "([a-fA-F0-9]{64})\\s+\\*?$basename"
+                }
+            }
+        }
+    }
+}

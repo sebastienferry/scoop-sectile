@@ -1,0 +1,60 @@
+# Follow the Sectile releases.
+#
+# Every few hours, and on demand, point bucket/sectile.json at the latest GitHub
+# Release of sebastienferry/sectile, check that the new manifest installs with
+# Scoop, then push it to main. Sectile's own release workflow knows nothing of
+# this bucket and holds no credential for it: this workflow reads public
+# release files and writes with its own token.
+name: update
+
+on:
+  schedule:
+    - cron: '47 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (vX.Y.Z); empty for the latest release'
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    # Windows, since the check installs the manifest.
+    runs-on: windows-latest
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Update the manifest
+        id: update
+        shell: bash
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          version=$(sh bin/update-manifest $TAG)
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          if git diff --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+      # scoop bucket add clones the repository, so it sees only committed
+      # files: the manifest is committed before the check and pushed only once
+      # it passed.
+      - name: Commit
+        if: steps.update.outputs.changed == 'true'
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -am "sectile ${{ steps.update.outputs.version }}"
+      - name: Check the manifest
+        if: steps.update.outputs.changed == 'true'
+        shell: pwsh
+        run: ./bin/check.ps1
+      - name: Push
+        if: steps.update.outputs.changed == 'true'
+        shell: bash
+        run: git push origin HEAD:main
