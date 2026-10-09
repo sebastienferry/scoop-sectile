@@ -17,7 +17,9 @@ if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
 }
 
 $version = (Get-Content bucket/sectile.json -Raw | ConvertFrom-Json).version
-Invoke-Checked { scoop bucket add sectile $PWD.Path }
+# scoop bucket add takes a Git URL, and a bare Windows path is not one.
+$bucket = 'file:///' + ($PWD.Path -replace '\\', '/')
+Invoke-Checked { scoop bucket add sectile $bucket }
 Invoke-Checked { scoop install sectile/sectile }
 
 $app = Join-Path (scoop prefix sectile) ''
