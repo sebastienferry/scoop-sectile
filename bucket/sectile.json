@@ -1,5 +1,5 @@
 {
-    "version": "0.4.1",
+    "version": "0.4.5",
     "description": "Local-first workflow manager for tickets, coding agents and pull requests",
     "homepage": "https://github.com/sebastienferry/sectile",
     "license": "Unknown",
@@ -9,8 +9,8 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/sebastienferry/sectile/releases/download/v0.4.1/sectile-desktop-windows-amd64.zip",
-            "hash": "fc1dc8afb1d271bbf02892f5533eb36342b5bea8cffe6557d2850ddc134a2c23"
+            "url": "https://github.com/sebastienferry/sectile/releases/download/v0.4.5/sectile-desktop-windows-amd64.zip",
+            "hash": "717d0f39a1da517e9827ac2f67cb0edf231ba05a65c5be33c27cb5f0159af7cd"
         }
     },
     "extract_dir": "Sectile-win32-x64",
